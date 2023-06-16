@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var appModel = AppModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        Group {
+            if !appModel.loginViewModel.isLoggedIn {
+                LoginView(viewModel: $appModel.loginViewModel)
+            } else {
+                MainView(appModel: $appModel)
+            }
         }
-        .padding()
     }
 }
 
@@ -23,4 +25,18 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
+}
+
+enum AppTabs {
+    case feed, inbox, profile
+}
+
+struct AppModel: Identifiable {
+    var id = UUID().uuidString
+    var selectedTab: Int = 0
+    
+    var loginViewModel = LoginViewModel()
+    var feedViewModel = FeedViewModel()
+    var profileViewModel = ProfileViewModel()
+    var inboxViewModel = InboxViewModel()
 }
